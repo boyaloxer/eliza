@@ -953,13 +953,20 @@ Text: ${attachment.text}
                 .join(" ");
         }
 
+        // Format character stats as a personality description
+        const statsDescription = this.character.stats
+            ? addHeader(
+                  "# Personality Traits",
+                  `${this.character.name} exhibits the following traits (0.0-1.0 scale):\n` +
+                  this.character.stats.map((stat) => `- ${stat}`).join("\n")
+              )
+            : "";
 
         const knowledegeData = await knowledge.get(this, message);
 
         const formattedKnowledge = formatKnowledge(
             knowledegeData
         );
-
 
         const initialState = {
             agentId: this.agentId,
@@ -977,6 +984,8 @@ Text: ${attachment.text}
                     : "",
             knowledge: formattedKnowledge,
             knowledgeData: knowledegeData,
+            // Add stats description to state
+            personalityTraits: statsDescription,
             // Recent interactions between the sender and receiver, formatted as messages
             recentMessageInteractions: formattedMessageInteractions,
             // Recent interactions between the sender and receiver, formatted as posts

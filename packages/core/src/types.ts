@@ -591,6 +591,17 @@ export enum Clients {
     TWITTER = "twitter",
     TELEGRAM = "telegram",
 }
+
+/**
+ * Represents a character trait with a weight value
+ */
+export type CharacterTrait = {
+    /** Name of the trait */
+    name: string;
+    /** Weight value between 0 and 1 */
+    weight: number;
+}
+
 /**
  * Configuration for an agent character
  */
@@ -652,6 +663,9 @@ export type Character = {
 
     /** Known topics */
     topics: string[];
+
+    /** Character traits and their weights */
+    stats?: string[]; // Add stats as simple string array
 
     /** Character traits */
     adjectives: string[];
