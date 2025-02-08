@@ -95,7 +95,21 @@ export const continueAction: Action = {
             state = (await runtime.composeState(message)) as State;
         }
         state = await runtime.updateRecentMessageState(state);
+        
+        // Check if this message has already been responded to
+        const existingResponse = state.recentMessagesData.find(m => 
+            m.content.inReplyTo === message.id && 
+            m.userId === runtime.agentId
+        );
 
+        if (existingResponse) {
+            elizaLogger.log("[CONTINUE] Found existing response to this message:");
+            elizaLogger.log(`[CONTINUE] Response ID: ${existingResponse.id}`);
+            elizaLogger.log(`[CONTINUE] Response action: ${existingResponse.content.action}`);
+            elizaLogger.log("[CONTINUE] Skipping to prevent double processing");
+            return;
+        }
+        
         // Get the agent's recent messages
         const agentMessages = state.recentMessagesData
             .filter((m: { userId: any }) => m.userId === runtime.agentId)
